@@ -1,0 +1,14 @@
+{
+  "name": "@schroffl/json-mapping",
+  "version": "0.0.1",
+  "description": "A set of utilites for defining and running conversions between JSON and JavaScript values",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "directories": {},
+  "scripts": {},
+  "author": "schroffl",
+  "license": "MIT",
+  "devDependencies": {
+    "benchmark": "^2.1.4"
+  }
+}
