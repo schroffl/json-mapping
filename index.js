@@ -34,6 +34,18 @@
     var FAIL = 13;
     var ONE_OF = 14;
 
+    /**
+     * The 'ok' and 'error' wrappers only exist for performance reasons.
+     * Previously I had an implementation that threw immediately when
+     * a decoder failed, but that had a hefty impact on the performance
+     * of Decode.oneOf, because it expects some of it's child decoders
+     * to fail.
+     *
+     * Now we have a separate decodeInternal function which uses the
+     * result wrappers and a user-exposed decode function which throws
+     * if the decoder fails.
+     */
+
     function ok(value) {
         return { ok: true, value: value };
     }
