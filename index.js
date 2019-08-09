@@ -68,7 +68,7 @@
     }
 
     function decode(decoder, value) {
-        var result = decodeInternal(decoder, value);
+        var result = decodeInternal(decoder, value, value);
 
         if (isOk(result)) {
             return result.value;
