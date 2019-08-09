@@ -126,7 +126,7 @@
                 if (isOk(result)) {
                     return decoder.fn(result.value);
                 } else {
-                    return result;
+                    return ok(result);
                 }
             }
 
