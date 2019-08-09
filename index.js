@@ -124,9 +124,9 @@
                 var result = decodeInternal(decoder.child, value, _obj_context);
 
                 if (isOk(result)) {
-                    return decoder.fn(result.value);
+                    return ok(decoder.fn(result.value));
                 } else {
-                    return ok(result);
+                    return result;
                 }
             }
 
