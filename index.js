@@ -58,8 +58,13 @@
         return { ok: false, msg: msg };
     }
 
+    function toDebugString(value) {
+        var str = '\n' + JSON.stringify(value, null, 4);
+        return str.replace(/\n/g, '\n    ') + '\n';
+    }
+
     function expected(type, value) {
-        return 'Expected ' + type + ', but got ' + JSON.stringify(value, null, 4);
+        return 'Expected ' + type + ', but got\n' + toDebugString(value);
     }
 
     function decode(decoder, value) {
