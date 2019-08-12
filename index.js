@@ -196,7 +196,10 @@
             if (isOk(result)) {
                 obj[key] = result.value;
             } else {
-                return result;
+                var fieldName = child.tag === FIELD ? child.key : key;
+                var msg = result.msg;
+                msg += '\nwhen decoding the field \'' + fieldName + '\' of\n' + toDebugString(value);
+                return err(msg);
             }
         }
 
