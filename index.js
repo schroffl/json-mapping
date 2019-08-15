@@ -166,11 +166,18 @@
             }
 
             case OBJECT:
-                return decodeObj(decoder.layout, {}, value);
-
             case INSTANCE:
-                var inst = new decoder.ctor();
-                return decodeObj(decoder.layout, inst, value);
+                if (typeof _obj_context !== 'object' || _obj_context === null || !(decoder.key in _obj_context)) {
+                    return err(expected('an object', value));
+                } else {
+                    var obj = {};
+
+                    if (decoder.tag === INSTANCE) {
+                        obj = new decoder.ctor();
+                    }
+
+                    return decodeObj(decoder.layout, obj, value);
+               }
 
             case ONE_OF: {
                 var decs = decoder.decoders;
