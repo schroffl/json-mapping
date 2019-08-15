@@ -167,7 +167,7 @@
 
             case OBJECT:
             case INSTANCE:
-                if (typeof value !== 'object' || value === null || !(decoder.key in value)) {
+                if (typeof value !== 'object' || value === null) {
                     return err(expected('an object', value));
                 } else {
                     var obj = {};
