@@ -101,7 +101,7 @@
         }
     }
 
-    function decodeInternal(decoder, value, _obj_context) {
+    function decodeInternal(decoder, value) {
         switch (decoder.tag) {
             case NUMBER:
                 if (typeof value !== 'number') {
@@ -125,10 +125,10 @@
                 }
 
             case FIELD: {
-                if (typeof _obj_context !== 'object' || _obj_context === null || !(decoder.key in _obj_context)) {
-                    return err(expected('an object with a field named \'' + decoder.key + '\'', _obj_context));
+                if (typeof value !== 'object' || value === null || !(decoder.key in value)) {
+                    return err(expected('an object with a field named \'' + decoder.key + '\'', value));
                 } else {
-                    return decodeInternal(decoder.child, _obj_context[decoder.key]);
+                    return decodeInternal(decoder.child, value[decoder.key]);
                 }
             }
 
@@ -147,10 +147,10 @@
 
             case LAZY:
                 var child = decoder.fn();
-                return decodeInternal(child, value, _obj_context);
+                return decodeInternal(child, value);
 
             case MAP: {
-                var result = decodeInternal(decoder.child, value, _obj_context);
+                var result = decodeInternal(decoder.child, value);
 
                 if (isOk(result)) {
                     return ok(decoder.fn(result.value));
@@ -160,10 +160,10 @@
             }
 
             case AND_THEN: {
-                var result = decodeInternal(decoder.child, value, _obj_context);
+                var result = decodeInternal(decoder.child, value);
 
                 if (isOk(result)) {
-                    return decodeInternal(decoder.fn(result.value), value, _obj_context);
+                    return decodeInternal(decoder.fn(result.value), value);
                 } else {
                     return result;
                 }
@@ -190,24 +190,16 @@
             }
 
             case OBJECT:
+                return decodeObj(decoder.layout, {}, value);
+
             case INSTANCE:
-                if (typeof value !== 'object' || value === null) {
-                    return err(expected('an object', value));
-                } else {
-                    var obj = {};
-
-                    if (decoder.tag === INSTANCE) {
-                        obj = new decoder.ctor();
-                    }
-
-                    return decodeObj(decoder.layout, obj, value);
-               }
+                return decodeObj(decoder.layout, new decoder.ctor(), value);
 
             case ONE_OF: {
                 var decs = decoder.decoders;
 
                 for (var i=0; i<decs.length; i++) {
-                    var result = decodeInternal(decs[i], value, _obj_context);
+                    var result = decodeInternal(decs[i], value);
 
                     if (isOk(result)) {
                         return result;
@@ -222,15 +214,12 @@
     function decodeObj(layout, obj, value) {
         for (var key in layout) {
             var child = layout[key],
-                result = decodeInternal(child, value[key], value);
+                result = decodeInternal(child, value);
 
             if (isOk(result)) {
                 obj[key] = result.value;
             } else {
-                var fieldName = child.tag === FIELD ? child.key : key;
-                var msg = result.msg;
-                msg += '\nwhen decoding the field \'' + fieldName + '\' of\n' + toDebugString(value);
-                return err(msg);
+                return result;
             }
         }
 
