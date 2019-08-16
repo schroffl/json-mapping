@@ -58,9 +58,33 @@
         return { ok: false, msg: msg };
     }
 
+    function debugReplace(key, value) {
+        if (key === '') {
+            return value;
+        } else if (Array.isArray(value)) {
+            return '<Array with ' + value.length + ' item(s)>';
+        } else if (typeof value === 'object' && value !== null) {
+            var fieldStr = '', fieldCount = 0;
+
+            for (var key in value) {
+                if (fieldCount === 3) {
+                    fieldStr += ', ...';
+                } else if (fieldCount < 3) {
+                    fieldStr += fieldCount === 0 ? '' : ', ';
+                    fieldStr += '\'' + key + '\'';
+                    fieldCount++;
+                }
+            }
+
+            return '<Object with ' + fieldCount + ' field(s), like ' + fieldStr + '>';
+        } else {
+            return value;
+        }
+    }
+
     function toDebugString(value) {
-        var str = '\n' + JSON.stringify(value, null, 4);
-        return str.replace(/\n/g, '\n    ') + '\n';
+        var str = '\n' + JSON.stringify(value, debugReplace, 4);
+        return str.replace(/\n/g, '\n   ') + '\n';
     }
 
     function expected(type, value) {
