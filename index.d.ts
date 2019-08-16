@@ -15,6 +15,7 @@ export namespace Decode {
     export function object<O>(layout: ObjectLayout<O>) : Decoder<O>
     export function instance<O>(ctor: new () => O, layout: ObjectLayout<O>) : Decoder<O>
     export function field<T>(name: string, child: Decoder<T>) : Decoder<T>
+    export function at<T>(path: string[], child: Decoder<T>) : Decoder<T>
 
     export function many<T>(child: Decoder<T>) : Decoder<T[]>
     export function map<A, B>(fn: (a: A) => B, child: Decoder<A>) : Decoder<B>

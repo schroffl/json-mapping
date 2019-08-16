@@ -289,6 +289,16 @@
         ]);
     };
 
+    Decode.at = function(path, child) {
+        var dec = child, i = path.length;
+
+        while (i-- > 0) {
+            dec = Decode.field(path[i], dec);
+        }
+
+        return dec;
+    };
+
     return {
         Decode: Decode,
 
