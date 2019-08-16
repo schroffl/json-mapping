@@ -128,6 +128,16 @@
                 if (typeof value !== 'object' || value === null || !(decoder.key in value)) {
                     return err(expected('an object with a field named \'' + decoder.key + '\'', value));
                 } else {
+                    var result = decodeInternal(decoder.child, value[decoder.key]);
+
+                    if (isOk(result)) {
+                        return result;
+                    } else {
+                        var msg = result.msg;
+                        msg += '\nwhen attempting to decode the field \'' + decoder.key + '\' of\n' + toDebugString(value);
+                        return err(msg);
+                    }
+
                     return decodeInternal(decoder.child, value[decoder.key]);
                 }
             }
@@ -182,7 +192,9 @@
                     if (isOk(result)) {
                         arr[i] = result.value;
                     } else {
-                        return result;
+                        var msg = result.msg;
+                        msg += '\nwhen attempting to decode the item at index ' + i + ' of\n' + toDebugString(value);
+                        return err(msg);
                     }
                 }
 
