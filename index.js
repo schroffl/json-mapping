@@ -72,8 +72,9 @@
                 } else if (fieldCount < 3) {
                     fieldStr += fieldCount === 0 ? '' : ', ';
                     fieldStr += '\'' + key + '\'';
-                    fieldCount++;
                 }
+
+                fieldCount++;
             }
 
             return '<Object with ' + fieldCount + ' field(s), like ' + fieldStr + '>';
