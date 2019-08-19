@@ -34,6 +34,8 @@
     var FAIL = 13;
     var ONE_OF = 14;
 
+    var FIELD_ERROR_META = 999;
+
     /**
      * The 'ok' and 'error' wrappers only exist for performance reasons.
      * Previously I had an implementation that threw immediately when
@@ -54,8 +56,8 @@
         return result.ok === true;
     }
 
-    function err(msg) {
-        return { ok: false, msg: msg };
+    function err(msg, meta) {
+        return { ok: false, msg: msg, meta: meta };
     }
 
     function debugReplace(key, value) {
@@ -150,7 +152,7 @@
                     } else {
                         var msg = result.msg;
                         msg += '\nwhen attempting to decode the field \'' + decoder.key + '\' of\n' + toDebugString(value);
-                        return err(msg);
+                        return err(msg, result.meta);
                     }
 
                     return decodeInternal(decoder.child, value[decoder.key]);
@@ -209,7 +211,7 @@
                     } else {
                         var msg = result.msg;
                         msg += '\nwhen attempting to decode the item at index ' + i + ' of\n' + toDebugString(value);
-                        return err(msg);
+                        return err(msg, result.meta);
                     }
                 }
 
@@ -246,6 +248,14 @@
             if (isOk(result)) {
                 obj[key] = result.value;
             } else {
+                if (result.meta !== FIELD_ERROR_META) {
+                    var msg = 'Did you forget to wrap your decoder in \'Decode.field\'?'
+                    msg += ' This is not done automatically for you when using \'Decode.object\' or \'Decode.instance\'. Here\'s the actual error: ';
+                    msg += result.msg;
+
+                    return err(msg, FIELD_ERROR_META);
+                }
+
                 return result;
             }
         }
