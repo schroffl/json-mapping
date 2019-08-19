@@ -99,7 +99,7 @@
 
     function toDebugString(value) {
         var str = '\n' + JSON.stringify(value, debugReplace, 4);
-        return str.replace(/\n/g, '\n   ') + '\n';
+        return str.replace(/\n/g, '\n    ') + '\n';
     }
 
     function expected(type, value) {
