@@ -62,7 +62,13 @@
         if (key === '') {
             return value;
         } else if (Array.isArray(value)) {
-            return '<Array with ' + value.length + ' item(s)>';
+            if (value.length === 0) {
+                return value;
+            } else if (value.length === 1) {
+                return '<Array with a single item>';
+            } else {
+                return '<Array with ' + value.length + ' items>';
+            }
         } else if (typeof value === 'object' && value !== null) {
             var fieldStr = '', fieldCount = 0;
 
@@ -77,7 +83,15 @@
                 fieldCount++;
             }
 
-            return '<Object with ' + fieldCount + ' field(s), like ' + fieldStr + '>';
+            if (fieldCount === 0) {
+                return value;
+            } else if (fieldCount === 1) {
+                return '<Object with the field ' + fieldStr + '>';
+            } else if (fieldCount <= 4) {
+                return '<Object with these fields: ' + fieldStr + '>';
+            } else {
+                return '<Object with ' + fieldCount + 'fields, like ' + fieldStr + '>';
+            }
         } else {
             return value;
         }
