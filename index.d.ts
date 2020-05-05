@@ -1,5 +1,6 @@
 export type Decoder<T> = {
     readonly __opaque_type: 'decoder'
+    readonly __type: T
 }
 
 export namespace Decode {
