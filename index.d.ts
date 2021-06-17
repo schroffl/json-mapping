@@ -8,6 +8,7 @@ export namespace Decode {
     export const string: Decoder<string>
     export const integer: Decoder<number>
     export const bool: Decoder<boolean>
+    export const unknown: Decoder<unknown>
 
     export type ObjectLayout<O> = {
         [K in keyof O]?: Decoder<O[K]>

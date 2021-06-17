@@ -34,6 +34,8 @@
     var FAIL = 13;
     var ONE_OF = 14;
 
+    var UNKNOWN = 15;
+
     var FIELD_ERROR_META = 999;
 
     /**
@@ -237,6 +239,10 @@
 
                 return err('No oneOf decoder matched');
             }
+
+            case UNKNOWN: {
+                return ok(value);
+            }
         }
     }
 
@@ -324,6 +330,8 @@
 
         return dec;
     };
+
+    Decode.unknown = { tag: UNKNOWN };
 
     return {
         Decode: Decode,
