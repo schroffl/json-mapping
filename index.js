@@ -199,11 +199,11 @@
             }
 
             case MANY: {
-                var arr = new Array(value.length);
-
                 if (!Array.isArray(value)) {
                     return err(expected('an array', value));
                 }
+                
+                var arr = new Array(value.length);
 
                 for (var i=0; i<value.length; i++) {
                     var result = decodeInternal(decoder.child, value[i]);
