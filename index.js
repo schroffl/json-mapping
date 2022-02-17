@@ -125,7 +125,7 @@
     function decodeInternal(decoder, value) {
         switch (decoder.tag) {
             case NUMBER:
-                if (typeof value !== 'number') {
+                if (typeof value !== 'number' || isNaN(value)) {
                     return err(expected('a number', value));
                 } else {
                     return ok(value);
