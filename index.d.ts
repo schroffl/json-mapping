@@ -160,6 +160,23 @@ export namespace Decode {
     export function object<O>(layout: ObjectLayout<O>) : Decoder<O>
 
     /**
+     * Decode an object with arbitrary keys and values of the same type T.
+     *
+     * @param child - Decoder to use for values
+     *
+     * @example
+     * ```typescript
+     * const raw = { en: 'Bread', fr: 'Pain', it: 'Pane' };
+     * const decoder = Decode.dict(Decode.string);
+     *
+     * decode(decoder, raw);         // Works
+     *
+     * decode(decoder, { en: 128 }); // Fails
+     * ```
+     */
+    export function dict<T>(child: Decoder<T>) : Decoder<{ [key: string]: T }>
+
+    /**
      * This is mostly equivalent to {@link Decode.object}, but it creates an
      * instance of the given class first. You should only use this for simple
      * classes that don't have a complex constructor. Use `map` or `andThen`

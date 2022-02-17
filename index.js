@@ -36,6 +36,8 @@
 
     var UNKNOWN = 15;
 
+    var DICT = 16;
+
     var FIELD_ERROR_META = 999;
 
     /**
@@ -243,6 +245,27 @@
             case UNKNOWN: {
                 return ok(value);
             }
+
+            case DICT: {
+                if (typeof value !== 'object' || value === null) {
+                    return err(expected('an object', value));
+                } else {
+                    var result = {};
+
+                    for (var key in value) {
+                        var child_value = decodeInternal(decoder.child, value[key]);
+
+                        if (isOk(child_value)) {
+                            result[key] = child_value.value;
+                        } else {
+                            // TODO Wrap in key info
+                            return child_value;
+                        }
+                    }
+
+                    return ok(result);
+                }
+            }
         }
     }
 
@@ -332,6 +355,10 @@
     };
 
     Decode.unknown = { tag: UNKNOWN };
+
+    Decode.dict = function(child) {
+        return { tag: DICT, child: child };
+    };
 
     return {
         Decode: Decode,
