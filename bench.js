@@ -5,6 +5,9 @@ const { Decode, decode } = require('./index');
 class User {}
 class Tree {}
 
+// Taken from https://stackoverflow.com/a/43053803
+const cartesian = (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
+
 const support = {
     object: Decode.object({
         value: Decode.integer,
@@ -36,9 +39,9 @@ const support = {
 
         return root;
     },
-    makeList: size => {
+    makeList: (size, value) => {
         const arr = new Array(size);
-        while (size-- > 0) arr[size] = Math.random();
+        while (size-- > 0) arr[size] = value;
         return arr;
     },
 };
@@ -80,11 +83,26 @@ suite
     });
 });
 
-[10, 1000, 100000].forEach(size => {
-    const list = support.makeList(size);
+cartesian(
+    [10, 1000, 100000],
+    [
+        { name: 'Decode.integer', decoder: Decode.integer, data: 42 },
+        { name: 'Decode.string',  decoder: Decode.string, data: '42' },
+        {
+            name: 'User model',
+            decoder: support.UserDecoder,
+            data: { id: 42, name: 'Name' },
+        },
+    ],
+).forEach(entry => {
+    const size = entry[0];
+    const info = entry[1];
 
-    suite.add(`Decode.many integer (size: ${size})`, () => {
-        return decode(support.listInteger, list);
+    const list = support.makeList(size, info.data);
+    const decoder = Decode.many(info.decoder);
+
+    suite.add(`Decode.many (size: ${size}, decoder: ${info.name})`, () => {
+        return decode(decoder, list);
     });
 });
 
@@ -104,4 +122,3 @@ suite.filter(bench => {
     const msg = cycle.target.toString();
     console.log(msg);
 }).run();
-
