@@ -132,7 +132,7 @@
                 }
 
             case INTEGER:
-                if (typeof value !== 'number' || (value | 0) !== value) {
+                if (typeof value !== 'number' || Math.trunc(value) !== value) {
                     return err(expected('an integer', value));
                 } else {
                     return ok(value);
