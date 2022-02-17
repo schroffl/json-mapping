@@ -96,7 +96,7 @@
             } else if (fieldCount <= 4) {
                 return '<Object with these fields: ' + fieldStr + '>';
             } else {
-                return '<Object with ' + fieldCount + 'fields, like ' + fieldStr + '>';
+                return '<Object with ' + fieldCount + ' fields, like ' + fieldStr + '>';
             }
         } else {
             return value;
