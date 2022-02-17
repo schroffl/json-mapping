@@ -576,3 +576,16 @@ export function decode<T>(decoder: Decoder<T>, json: any) : T
  * @see decode
  */
 export function decodeString<T>(decoder: Decoder<T>, json: string) : T
+
+/**
+ * Useful for building error messages for your own little decoders.
+ * Since this function is used internally, the message layout will be the same,
+ * which makes it easier for humans to parse error messages. Especially when
+ * decoding complex values.
+ *
+ * @param description - Describe what kind of value you expected
+ * @param value - Whatever value you got instead
+ *
+ * @returns A nicely formatted error string
+ */
+export function expected(description: string, value: any) : string

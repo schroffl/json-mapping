@@ -340,6 +340,8 @@
         decodeString: function(decoder, str) {
             var val = JSON.parse(str);
             return decode(decoder, val);
-        }
+        },
+
+        expected: expected,
     };
 }));
