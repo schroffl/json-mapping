@@ -33,6 +33,37 @@ export type Decoder<T> = {
 }
 
 /**
+ * Mapped type that creates an object from the given type where every property
+ * is optional, but wraps the actual type in a Decoder. It's used by
+ * {@link Decode.object} and {@link Decode.instance}.
+ *
+ * @typeParam O - The type to generate the layout for
+ *
+ * @example
+ * If you had a User model like
+ * ```typescript
+ * class User {
+ *     id: number;
+ *     name: string;
+ *     children: User[];
+ * }
+ * ```
+ *
+ * the mapped layout would look like this:
+ *
+ * ```typescript
+ * type UserLayout = {
+ *     id?: Decoder<number>,
+ *     name?: Decoder<string>,
+ *     children?: Decoder<User[]>,
+ *  }
+ * ```
+ */
+export type ObjectLayout<O> = {
+    [K in keyof O]?: Decoder<O[K]>
+}
+
+/**
  * This namespace wraps all the decoders exposed by this package.
  * It contains primitive decoders like {@link Decode.string} to more
  * complicated ones like {@link Decode.map}.
@@ -88,10 +119,6 @@ export namespace Decode {
      */
     export const bool: Decoder<boolean>
 
-    export type ObjectLayout<O> = {
-        [K in keyof O]?: Decoder<O[K]>
-    }
-    
     /**
      * Decode the value as-is. You probably shouldn't use this, because there's
      * a high chance you're abusing it as an escape-hatch.
