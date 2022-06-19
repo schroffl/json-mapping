@@ -139,6 +139,13 @@ test('Decode.oneOf', t => {
     ]);
 
     t.deepEqual(result, [1, 2]);
+
+    const failing = Decode.oneOf([
+        Decode.integer,
+        Decode.string,
+    ]);
+
+    t.throws(() => decode(failing, true));
 });
 
 test('Decode.andThen', t => {
@@ -152,6 +159,7 @@ test('Decode.andThen', t => {
     t.is(run(101), 'big');
     t.throws(() => run(42));
     t.throws(() => run(100));
+    t.throws(() => run('42'));
 });
 
 test('Decode.dict', t => {
@@ -173,6 +181,40 @@ test('Decode.object', t => {
     const run = make(Decode.object({ value: Decode.integer }));
 
     t.deepEqual(run(42), { value: 42 });
+
+    // Nested object
+    const run_other = make(
+        Decode.object({
+            name: Decode.field('name', Decode.string),
+            position: Decode.object({
+                latitude: Decode.field('lat', Decode.number),
+                longitude: Decode.field('lng', Decode.number),
+            }),
+        }),
+    );
+
+    t.deepEqual(
+        run_other({
+            name: 'Taj Mahal',
+            lat: 27.175000,
+            lng: 78.041944,
+        }),
+        {
+            name: 'Taj Mahal',
+            position: {
+                latitude: 27.175000,
+                longitude: 78.041944,
+            },
+        },
+    );
+
+    t.throws(() => {
+        run_other({
+            name: 'abc',
+            lat: '27',
+            lng: '78',
+        });
+    });
 });
 
 test('Decode.instance', t => {
