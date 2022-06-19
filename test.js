@@ -1,5 +1,5 @@
 const test = require('ava');
-const { Decode, decode, expected } = require('./index');
+const { Decode, decode, expected, decodeString } = require('./index');
 
 const make = decoder => decode.bind(undefined, decoder);
 
@@ -252,4 +252,35 @@ test('Decode.map', t => {
 test('expected', t => {
     const msg = expected('some type');
     t.true(typeof msg === 'string');
+});
+
+// `decodeString` should produce the same result as `decode`.
+test('decodeString', t => {
+    const cases = [
+        { value: true, decoder: Decode.bool },
+        { value: 100, decoder: Decode.integer },
+        { value: 100.1, decoder: Decode.integer },
+        { value: 100.1, decoder: Decode.number },
+        { value: { a: 42 }, decoder: Decode.field('a', Decode.integer) },
+    ];
+
+    cases.map(caze => {
+        const str = JSON.stringify(caze.value);
+
+        return {
+            normal: () => decode(caze.decoder, caze.value),
+            stringified: () => decodeString(caze.decoder, str),
+        };
+    }).forEach(caze => {
+        let result;
+
+        try {
+            result = caze.normal();
+        } catch (e) {
+            t.throws(caze.stringified);
+            return;
+        }
+
+        t.deepEqual(caze.stringified(), result);
+    });
 });
