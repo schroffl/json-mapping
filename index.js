@@ -162,8 +162,6 @@
                         msg += '\nwhen attempting to decode the field \'' + decoder.key + '\' of\n' + toDebugString(value);
                         return err(msg, result.meta);
                     }
-
-                    return decodeInternal(decoder.child, value[decoder.key]);
                 }
             }
 
