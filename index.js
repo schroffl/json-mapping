@@ -1,6 +1,7 @@
 // The export pattern is a UMD template:
 // https://github.com/umdjs/umd/blob/1deb860078252f31ced62fa8e7694f8bbfa6d889/templates/returnExports.js
 (function (root, factory) {
+    /* c8 ignore start */
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define([], factory);
@@ -13,6 +14,7 @@
         // Browser globals (root is window)
         root.JsonMapping = factory();
     }
+    /* c8 ignore stop */
 }(this, function () {
     var Decode = {};
 
@@ -64,6 +66,7 @@
         return { ok: false, msg: msg, meta: meta };
     }
 
+    /* c8 ignore start */
     function debugReplace(key, value) {
         if (key === '') {
             return value;
@@ -102,6 +105,7 @@
             return value;
         }
     }
+    /* c8 ignore stop */
 
     function toDebugString(value) {
         var str = '\n' + JSON.stringify(value, debugReplace, 4);

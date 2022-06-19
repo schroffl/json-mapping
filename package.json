@@ -6,12 +6,13 @@
     "types": "index.d.ts",
     "directories": {},
     "scripts": {
-        "test": "ava"
+        "test": "c8 -r html ava"
     },
     "author": "schroffl",
     "license": "MIT",
     "devDependencies": {
         "ava": "^4.0.1",
-        "benchmark": "^2.1.4"
+        "benchmark": "^2.1.4",
+        "c8": "^7.11.3"
     }
 }
