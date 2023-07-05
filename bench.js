@@ -44,6 +44,10 @@ const support = {
         while (size-- > 0) arr[size] = value;
         return arr;
     },
+
+    // We want to measure the performance of optionalField itself as best as we
+    // can, not that of its child decoder.
+    optionalField: Decode.optionalField('value', undefined, Decode.unknown),
 };
 
 suite
@@ -73,6 +77,14 @@ suite
             id: 42,
             name: 'Yo Bo',
         });
+    })
+    .add('Decode.optionalField (field present)', () => {
+        return decode(support.optionalField, {
+            value: 42,
+        });
+    })
+    .add('Decode.optionalField (field absent)', () => {
+        return decode(support.optionalField, {});
     });
 
 [10, 100, 1000].forEach(depth => {

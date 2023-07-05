@@ -291,6 +291,29 @@ test('Decode.map', t => {
     t.throws(() => run('0'));
 });
 
+test('Decode.optionalField', t => {
+    const run = make(Decode.optionalField('field', 0, Decode.integer));
+
+    t.is(run({ field: 42 }), 42);
+    t.is(run({}), 0);
+    t.throws(() => run({ field: '42' }));
+    t.throws(() => run({ field: 42.2 }));
+    t.throws(() => run({ field: NaN }));
+    t.throws(() => run({ field: undefined }));
+});
+
+test('Decode.optionalAt', t => {
+    const run = make(Decode.optionalAt(['a', 'b', 'c', 'd'], 0, Decode.integer));
+
+    t.is(run({a: {b: {c: {d: 42 }}}}), 42);
+    t.is(run({a: {b: {c: {f: 42 }}}}), 0);
+    t.is(run({b: {a: {c: {d: 42 }}}}), 0);
+    t.is(run({}), 0);
+
+    t.throws(() => run({a: {b: {c: {d: '42' }}}}));
+    t.throws(() => run({a: {b: {c: '42'}}}));
+});
+
 test('expected', t => {
     const msg = expected('some type');
     t.true(typeof msg === 'string');

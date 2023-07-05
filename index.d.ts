@@ -242,6 +242,25 @@ export namespace Decode {
     export function field<T>(name: string, child: Decoder<T>) : Decoder<T>
 
     /**
+     * Same as {@link Decode.field}, but it doesn't fail when the property is not
+     * present on the object. In that case, the provided value is returned.
+     *
+     * @param name - Name of the property
+     * @param value - The value to use if the field is absent
+     * @param child - The decoder to run on the value of that property
+     *
+     * @example
+     * ```typescript
+     * const decoder = Decode.optionalField('value', 100, Decode.integer);
+     *
+     * decode(decoder, { value: 42 }) === 42
+     * decode(decoder, {}) === 100
+     * decode(decoder, 42) // Fails
+     * ```
+     */
+    export function optionalField<T>(name: string, value: T, child: Decoder<T>) : Decoder<T>
+
+    /**
      * It's basically the same as {@link Decode.field}, but makes it easier
      * to define deep property paths.
      * Instead of `Decode.field('outer', Decode.field('inner', Decode.string))`
@@ -294,6 +313,32 @@ export namespace Decode {
      * ```
      */
     export function at<T>(path: string[], child: Decoder<T>) : Decoder<T>
+
+    /**
+     * This is the same as {@link Decode.at}, but implemented in terms of {@link
+     * Dec.optionalField} instead of {@link Decode.field}.
+     * This means that the provided value is returned if any object in the
+     * given path is missing the next property.
+     *
+     * @param path - The property path to follow. The first name is the
+     *               outer-most field
+     * @param value - The value to use if any field is absent
+     * @param child - The decoder to run on that field
+     *
+     * @example
+     * ```typescript
+     * const decoder = Decode.optionalAt(['outer', 'inner', 'value'], 100, Decode.integer);
+     *
+     * decode(decoder, { outer: { inner: { value: 42 } } }) === 42
+     * decode(decoder, { outer: { inner: { } } }) === 100
+     * decode(decoder, { outer: { } }) === 100
+     * decode(decoder, {}) === 100
+     * decode(decoder, 42) // Fails
+     * decode(decoder, { outer: 42 }) // Fails
+     * decode(decoder, { outer: { inner: 42 } }) // Fails
+     * ```
+     */
+    export function optionalAt<T>(name: string, value: T, child: Decoder<T>) : Decoder<T>
 
     /**
      * Make a decoder that can be used for decoding arrays, where

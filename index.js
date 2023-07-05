@@ -150,7 +150,13 @@
                 }
 
             case FIELD: {
-                if (typeof value !== 'object' || value === null || !(decoder.key in value)) {
+                if (typeof value !== 'object' || value === null) {
+                    return err(expected('an object with a field named \'' + decoder.key + '\'', value));
+                } else if (!(decoder.key in value)) {
+                    if ('otherwise' in decoder) {
+                        return ok(decoder.otherwise);
+                    }
+
                     return err(expected('an object with a field named \'' + decoder.key + '\'', value));
                 } else {
                     var result = decodeInternal(decoder.child, value[decoder.key]);
@@ -360,6 +366,20 @@
 
     Decode.dict = function(child) {
         return { tag: DICT, child: child };
+    };
+
+    Decode.optionalField = function(key, val, child) {
+        return { tag: FIELD, key: key, child: child, otherwise: val };
+    };
+
+    Decode.optionalAt = function(path, val, child) {
+        var dec = child, i = path.length;
+
+        while (i-- > 0) {
+            dec = Decode.optionalField(path[i], val, dec);
+        }
+
+        return dec;
     };
 
     return {
