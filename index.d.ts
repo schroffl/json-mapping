@@ -315,8 +315,8 @@ export namespace Decode {
     export function at<T>(path: string[], child: Decoder<T>) : Decoder<T>
 
     /**
-     * This is the same as {@link Decode.at}, but implemented in terms of {@link
-     * Dec.optionalField} instead of {@link Decode.field}.
+     * This is the same as {@link Decode.at}, but implemented in terms of
+     * {@link Decode.optionalField} instead of {@link Decode.field}.
      * This means that the provided value is returned if any object in the
      * given path is missing the next property.
      *
