@@ -6,13 +6,15 @@
     "types": "index.d.ts",
     "directories": {},
     "scripts": {
-        "test": "c8 -r html --100 ava"
+        "test": "c8 -r html --100 ava",
+        "docs": "typedoc ./index.d.ts"
     },
     "author": "schroffl",
     "license": "MIT",
     "devDependencies": {
         "ava": "^4.0.1",
         "benchmark": "^2.1.4",
-        "c8": "^7.11.3"
+        "c8": "^7.11.3",
+        "typedoc": "^0.25.4"
     }
 }
