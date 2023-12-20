@@ -370,8 +370,7 @@ export namespace Decode {
     export function many<T>(child: Decoder<T>) : Decoder<T[]>
 
     /**
-     * Take the value decoded by the given decoder and do something
-     * with it.
+     * Take the value decoded by the given decoder and transform it.
      *
      * @param fn - Your mapping function
      * @param child - The decoder to run before calling your function
@@ -381,7 +380,21 @@ export namespace Decode {
      *
      * @example
      * ```typescript
-     * // TODO
+     * // Add 42 to a number
+     * const add_42_decoder = Decode.map(value => value + 42, Decode.number);
+     *
+     * decode(add_42_decoder, 0) === 42
+     * decode(add_42_decoder, -42) === 0
+     * decode(add_42_decoder, 42) === 84
+     * decode(add_42_decoder, 'text') // Fails
+     *
+     * // Convert any value to its string representation.
+     * const to_string_decoder = Decode.map(value => String(value), Decode.unknown);
+     *
+     * decode(to_string_decoder, 42) === '42'
+     * decode(to_string_decoder, {}) === '[object Object]'
+     * decode(to_string_decoder, 'text') === 'text'
+     * decode(to_string_decoder, Symbol('my_symbol')) === 'Symbol(my_symbol)'
      * ```
      */
     export function map<A, B>(fn: (a: A) => B, child: Decoder<A>) : Decoder<B>
