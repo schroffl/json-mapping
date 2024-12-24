@@ -283,8 +283,10 @@
                         if (isOk(child_value)) {
                             result[key] = child_value.value;
                         } else {
-                            // TODO Wrap in key info
-                            return child_value;
+                            var msg = 'Failed to decode dictionary, because attempting to decode the field \'' + key + '\' failed with the following error:\n\n';
+                            msg += child_value.msg;
+                            msg += '\nwhen attempting to decode the field \'' + key + '\' of\n' + toDebugString(value);
+                            return err(msg);
                         }
                     }
 
