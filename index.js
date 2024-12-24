@@ -255,16 +255,16 @@
                 for (var err_i = 0; err_i < errs.length; err_i++) {
                     var error = errs[err_i];
 
-                    str += err_i === 0 ? '┌' : '├';
-                    str += '── Decoder at index ' + err_i + ' reported:\n│\n│';
-                    str += ('\n' + error.msg).replace(/\n/g, '\n│    ') + '\n│';
+                    str += err_i === 0 ? '    ┌' : '    ├';
+                    str += '── Decoder at index ' + err_i + ' reported:\n    │\n    │';
+                    str += ('\n' + error.msg).replace(/\n/g, '\n    │    ') + '\n    │';
 
                     if (err_i < errs.length - 1) {
-                        str += '\n│\n';
+                        str += '\n    │\n';
                     }
                 }
 
-                return err(str + '\n┴\n');
+                return err(str + '\n    ┴\n');
             }
 
             case UNKNOWN: {
