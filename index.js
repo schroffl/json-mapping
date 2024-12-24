@@ -238,16 +238,33 @@
 
             case ONE_OF: {
                 var decs = decoder.decoders;
+                var errs = new Array(decs.length);
 
                 for (var i=0; i<decs.length; i++) {
                     var result = decodeInternal(decs[i], value);
 
                     if (isOk(result)) {
                         return result;
+                    } else {
+                        errs[i] = result;
                     }
                 }
 
-                return err('No oneOf decoder matched');
+                var str = 'oneOf failed, because none of its child decoders were successful in decoding the value, here is a list of all errors:\n\n';
+
+                for (var err_i = 0; err_i < errs.length; err_i++) {
+                    var error = errs[err_i];
+
+                    str += err_i === 0 ? '┌' : '├';
+                    str += '── Decoder at index ' + err_i + ' reported:\n│\n│';
+                    str += ('\n' + error.msg).replace(/\n/g, '\n│    ') + '\n│';
+
+                    if (err_i < errs.length - 1) {
+                        str += '\n│\n';
+                    }
+                }
+
+                return err(str + '\n┴\n');
             }
 
             case UNKNOWN: {
